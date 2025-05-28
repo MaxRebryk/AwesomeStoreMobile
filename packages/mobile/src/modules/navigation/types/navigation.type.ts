@@ -1,0 +1,48 @@
+import { IOrderItems } from 'src/shared/services/ordersService';
+import { IProduct } from 'src/shared/services/productsService';
+
+export enum NAVIGATION_KEYS {
+	LOGIN = 'LOGIN',
+	REGISTER = 'REGISTER',
+	VERIFICATION = 'VERIFICATION',
+	VERIFYCOMPLETE = 'VERIFYCOMPLETE',
+	PRODUCTS = 'PRODUCTS',
+	TABS = 'TABS',
+	PRODUCTS_TAB = 'PRODUCTS',
+	SETTINGS_TAB = 'SETTINGS',
+	ORDERS_TAB = 'ORDERS',
+	PRODUCT = 'PRODUCT',
+	CART = 'CART',
+	EDIT_CART = 'EDIT_CART',
+	ORDER_DETAILS = 'ORDER_DETAILS',
+	PAYMENT_SUCCEFUL = 'PAYMENT-SUCCESSFUL',
+	PERSONAL_INFO = 'PERSONAL_INFO',
+	CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+	TERMS = 'TERMS',
+}
+
+export type RootStackParamList = {
+	[NAVIGATION_KEYS.LOGIN]: undefined;
+	[NAVIGATION_KEYS.REGISTER]: undefined;
+	[NAVIGATION_KEYS.VERIFICATION]: { email: string };
+	[NAVIGATION_KEYS.VERIFYCOMPLETE]: undefined;
+	[NAVIGATION_KEYS.PRODUCTS]: undefined;
+	[NAVIGATION_KEYS.TABS]: undefined;
+	[NAVIGATION_KEYS.PRODUCT]: { product: IProduct };
+	[NAVIGATION_KEYS.CART]: undefined;
+	[NAVIGATION_KEYS.EDIT_CART]: { product: IProduct };
+	[NAVIGATION_KEYS.ORDER_DETAILS]: {
+		order: IOrderItems;
+		onOrderDeleted?: () => void;
+	};
+	[NAVIGATION_KEYS.PAYMENT_SUCCEFUL]: undefined;
+	[NAVIGATION_KEYS.PERSONAL_INFO]: undefined;
+	[NAVIGATION_KEYS.CHANGE_PASSWORD]: undefined;
+	[NAVIGATION_KEYS.TERMS]: undefined;
+};
+
+export type TabStackParamList = {
+	[NAVIGATION_KEYS.PRODUCTS_TAB]: undefined;
+	[NAVIGATION_KEYS.SETTINGS_TAB]: undefined;
+	[NAVIGATION_KEYS.ORDERS_TAB]: undefined;
+};

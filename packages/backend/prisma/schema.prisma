@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum PaymentStatus {
+  COMPLETE
+  FAILED
+  PENDING
+}
+
+enum DeliveryStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+}
+
+model User {
+  uid                      String   @id @default(uuid())
+  email                    String   @unique
+  name                     String
+  password                 String
+  phoneNumber              String? 
+  shippingAddress          String?
+  role                     Role     @default(USER)
+  emailVerified            Boolean  @default(false)
+  verificationCode         String?  
+  verificationCodeExpiry   DateTime? 
+  orders                   Order[]
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model Products {
+  uid                      String   @id @default(uuid())
+  name                     String   @unique
+  description              String? 
+  category                 String
+  inStock                  Int
+  price                    Float
+  orderDetails             OrdersDetail[]
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model Order {
+  orderId          String        @id @default(uuid())
+  userId           String
+  totalAmount      Float
+  deliveryStatus   DeliveryStatus @default(PENDING)
+  paymentStatus    PaymentStatus @default(PENDING)    
+  user             User          @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  orderDetails     OrdersDetail[]
+  payments         Payment[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model OrdersDetail {
+  orderDetailId     String       @id @default(uuid())   
+  orderId           String                            
+  productId         String         
+  quantity          Int
+  priceAtPurchase   Float        
+  order             Order    @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  product           Products @relation(fields: [productId], references: [uid], onDelete: Cascade)
+}
+
+model Payment {
+  paymentId      String       @id @default(uuid())  
+  orderId        String
+  totalAmount    Float
+  paymentStatus  PaymentStatus
+  transactionId  String?      @default(uuid())
+  order          Order        @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
